@@ -1,0 +1,26 @@
+- local_loop:
+    name: image0
+
+- partitioning:
+    base: image0
+    label: mbr
+    partitions:
+      - name: root
+        flags: [boot, primary]
+        size: 100%
+
+- mkfs:
+    name: mkfs_root
+    base: root
+    type: btrfs
+    label: img_root
+
+- mount:
+    name: root_mnt
+    base: mkfs_root
+    mount_point: /
+
+- fstab:
+    name: fstab
+    base: root_mnt
+    options: compress-force=zstd:3,autodefrag,noatime

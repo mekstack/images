@@ -1,0 +1,61 @@
+name: Build custom image
+on:
+  push:
+    branches:
+      - master
+
+env:
+  images: "debian ubuntu"
+jobs:
+  Install-Deps:
+    runs-on: self-hosted
+    steps:
+      - name: Apt
+        run: |
+          sudo apt update; sudo apt install -y python3-virtualenv debian-archive-keyring python3.10-venv python3-pip btrfs-progs qemu-system squashfs-tools multipath-tools debootstrap dpkg
+      - name: pip
+        run: |
+          pip install python-openstackclient
+
+  Build:
+    runs-on: self-hosted
+    needs: ["Install-Deps"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize clouds.yaml
+        run: |
+          echo "${{ secrets.clouds }}" > clouds.yaml
+
+      - name: Build and publish
+        run: |
+          for image in ${{ env.images }}; do
+            cd $image
+            ! OS_CLOUD=openstack openstack image list --hidden --project mekstack --name "Mekstack $image"--tag staging 2>/dev/null 1>/dev/null
+            ./build-image.sh
+            cd ..
+            export OS_CLOUD=openstack
+            export NONCE=$(openssl rand -base64 10)
+            if [[ $image = "ubuntu" ]]
+            then
+              export IMAGE_NAME="Mekstack Ubuntu 22.04.3 LTS"
+            else
+              export IMAGE_NAME="Mekstack Debian Bookworm 12"
+            fi
+            openstack image create \
+                --property description="$image built on $(date +'%d %b'). Default user: $image" \
+                --property hw_qemu_guest_agent=yes \
+                --property autobuild_nonce=$NONCE \
+                --property autobuild=yes \
+                --container-format bare \
+                --tag staging \
+                --private \
+                --project 37e471bf9f584ebd986acc44639a5bd4 \
+                --min-disk 3 \
+                --min-ram 512 \
+                --disk-format qcow2 \
+                --file $image/mekstack_$image.qcow2 \
+                "$IMAGE_NAME"
+            openstack image list --tag staging --project 37e471bf9f584ebd986acc44639a5bd4 --property "autobuild_nonce=$NONCE" -f value -c ID | xargs -n1 openstack image set --public
+          done

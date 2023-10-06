@@ -1,0 +1,24 @@
+fish:
+  phase: post-install.d
+docker:
+  phase: post-install.d
+docker.io:
+  phase: post-install.d
+docker-compose:
+  phase: post-install.d
+vim:
+  phase: post-install.d
+ncdu:
+  phase: post-install.d
+neofetch:
+  phase: post-install.d
+fzf:
+  phase: post-install.d
+pastebinit:
+  phase: post-install.d
+nano:
+  phase: post-install.d
+man:
+  phase: post-install.d
+iputils-ping:
+  phase: pre-install.d
