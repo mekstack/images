@@ -1,7 +1,5 @@
 fish:
   phase: post-install.d
-docker:
-  phase: post-install.d
 docker.io:
   phase: post-install.d
 docker-compose:
@@ -20,5 +18,3 @@ nano:
   phase: post-install.d
 man:
   phase: post-install.d
-iputils-ping:
-  phase: pre-install.d

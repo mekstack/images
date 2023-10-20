@@ -1,25 +1,39 @@
-name: Build custom image
+name: Execute and publish image autobuilds
 on:
   push:
     branches:
       - master
 
 env:
-  images: "debian ubuntu"
+  AUTOBUILD_OS_PROJECT: 37e471bf9f584ebd986acc44639a5bd4
+  OS_CLOUD: openstack
+
 jobs:
-  Install-Deps:
+  install-deps:
     runs-on: self-hosted
     steps:
-      - name: Apt
+      - name: Install apt dependencies
         run: |
-          sudo apt update; sudo apt install -y python3-virtualenv debian-archive-keyring python3.10-venv python3-pip btrfs-progs qemu-system squashfs-tools multipath-tools debootstrap dpkg
-      - name: pip
-        run: |
-          pip install python-openstackclient
+          sudo apt update &&
+          sudo apt install -y python3-virtualenv \
+                              debian-archive-keyring \
+                              python3.10-venv \
+                              python3-pip \
+                              btrfs-progs \
+                              qemu-system \
+                              qemu-utils \
+                              squashfs-tools \
+                              multipath-tools \
+                              debootstrap dpkg
 
-  Build:
+      - name: Install pip dependencies
+        run: |
+          sudo pip install python-openstackclient \
+                           diskimage-builder
+
+  build-and-publish:
     runs-on: self-hosted
-    needs: ["Install-Deps"]
+    needs: ["install-deps"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,34 +42,59 @@ jobs:
         run: |
           echo "${{ secrets.clouds }}" > clouds.yaml
 
-      - name: Build and publish
+      - name: Build Mekstack Ubuntu
         run: |
-          for image in ${{ env.images }}; do
-            cd $image
-            ! OS_CLOUD=openstack openstack image list --hidden --project mekstack --name "Mekstack $image"--tag staging 2>/dev/null 1>/dev/null
-            ./build-image.sh
-            cd ..
-            export OS_CLOUD=openstack
-            export NONCE=$(openssl rand -base64 10)
-            if [[ $image = "ubuntu" ]]
-            then
-              export IMAGE_NAME="Mekstack Ubuntu 22.04.3 LTS"
-            else
-              export IMAGE_NAME="Mekstack Debian Bookworm 12"
-            fi
-            openstack image create \
-                --property description="$image built on $(date +'%d %b'). Default user: $image" \
-                --property hw_qemu_guest_agent=yes \
-                --property autobuild_nonce=$NONCE \
-                --property autobuild=yes \
-                --container-format bare \
-                --tag staging \
-                --private \
-                --project 37e471bf9f584ebd986acc44639a5bd4 \
-                --min-disk 3 \
-                --min-ram 512 \
-                --disk-format qcow2 \
-                --file $image/mekstack_$image.qcow2 \
-                "$IMAGE_NAME"
-            openstack image list --tag staging --project 37e471bf9f584ebd986acc44639a5bd4 --property "autobuild_nonce=$NONCE" -f value -c ID | xargs -n1 openstack image set --public
-          done
+          ELEMENTS_PATH=elements diskimage-builder ubuntu.yaml
+
+      - name: Publish Mekstack Ubuntu
+        run: |
+          openstack image create \
+              --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
+              --property hw_qemu_guest_agent=yes \
+              --property autobuild=yes \
+              --container-format bare \
+              --public \
+              --project $AUTOBUILD_OS_PROJECT \
+              --min-disk 5 \
+              --min-ram 1024 \
+              --disk-format qcow2 \
+              --file ubuntu.qcow2 \
+              "Mekstack Ubuntu 22.04.3 LTS"
+
+      - name: Build Mekstack Ubuntu Minimal
+        run: |
+          ELEMENTS_PATH=elements diskimage-builder ubuntu-minimal.yaml
+
+      - name: Publish Mekstack Ubuntu
+        run: |
+          openstack image create \
+              --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
+              --property hw_qemu_guest_agent=yes \
+              --property autobuild=yes \
+              --container-format bare \
+              --public \
+              --project $AUTOBUILD_OS_PROJECT \
+              --min-disk 3 \
+              --min-ram 512 \
+              --disk-format qcow2 \
+              --file ubuntu.qcow2 \
+              "Mekstack Ubuntu minimal 22.04.3 LTS"
+
+      - name: Build Mekstack Debian
+        run: |
+          ELEMENTS_PATH=elements diskimage-builder debian.yaml
+
+      - name: Publish Mekstack Debian
+        run: |
+          openstack image create \
+              --property description="Built on $(date +'%d %B'). Default user: debian" \
+              --property hw_qemu_guest_agent=yes \
+              --property autobuild=yes \
+              --container-format bare \
+              --public \
+              --project $AUTOBUILD_OS_PROJECT \
+              --min-disk 3 \
+              --min-ram 512 \
+              --disk-format qcow2 \
+              --file debian.qcow2 \
+              "Mekstack Debian Bookworm 12"

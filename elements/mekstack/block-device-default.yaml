@@ -13,7 +13,7 @@
     name: mkfs_root
     base: root
     type: btrfs
-    label: img_root
+    label: btrfs_root
 
 - mount:
     name: root_mnt
@@ -23,4 +23,4 @@
 - fstab:
     name: fstab
     base: root_mnt
-    options: compress-force=zstd:3,autodefrag,noatime
+    options: defaults,noatime,commit=300

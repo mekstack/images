@@ -1,0 +1,22 @@
+---
+- imagename: ubuntu-minimal.qcow2
+  environment:
+    DIB_RELEASE: jammy
+    DIB_BLOCK_DEVICE_CONFIG: "file://./elements/mekstack/block-device-default.yaml"
+    DIB_DEV_USER_USERNAME: cloud
+    DIB_DEV_USER_SHELL: "/bin/bash"
+    DIB_DEV_USER_PWDLESS_SUDO: "1"
+    DIB_CLOUD_INIT_DATASOURCES: "ConfigDrive, OpenStack"
+    DIB_MIN_TMPFS: "4"
+  elements:
+    - base
+    - ubuntu-minimal
+    - cleanup-kernel-initrd
+    - vm
+    - block-device-mbr
+    - openssh-server
+    - cloud-init
+    - cloud-init-datasources
+    - devuser
+    - dhcp-all-interfaces
+    - mekstack
