@@ -1,5 +1,3 @@
-fish:
-  phase: post-install.d
 vim:
   phase: post-install.d
 ncdu:
@@ -13,4 +11,8 @@ pastebinit:
 nano:
   phase: post-install.d
 man:
+  phase: post-install.d
+iputils-ping:
+  phase: post-install.d
+dnsutils:
   phase: post-install.d
