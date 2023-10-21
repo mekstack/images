@@ -1,18 +1,10 @@
 vim:
-  phase: post-install.d
 ncdu:
-  phase: post-install.d
 neofetch:
-  phase: post-install.d
 fzf:
-  phase: post-install.d
 pastebinit:
-  phase: post-install.d
 nano:
-  phase: post-install.d
 man:
-  phase: post-install.d
 iputils-ping:
-  phase: post-install.d
 dnsutils:
-  phase: post-install.d
+qemu-guest-agent:
