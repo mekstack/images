@@ -65,7 +65,7 @@ jobs:
               )
           openstack image list --project $AUTOBUILD_OS_PROJECT --name "Mekstack Ubuntu 22.04.3 LTS" -f value -c ID |
           grep -v $ID |
-          xargs -L1 openstack image set --public --hidden
+          xargs -L1 --no-run-if-empty openstack image set --public --hidden
         shell: bash
 
       - name: Build Mekstack Ubuntu minimal
@@ -91,7 +91,7 @@ jobs:
             )
           openstack image list --project $AUTOBUILD_OS_PROJECT --name 'Mekstack Ubuntu 22.04.3 LTS (minimal)' -f value -c ID |
           grep -v $ID |
-          xargs -L1 openstack image set --public --hidden
+          xargs -L1 --no-run-if-empty openstack image set --public --hidden
         shell: bash
 
       - name: Build Mekstack Debian
@@ -117,5 +117,5 @@ jobs:
             )
           openstack image list --project $AUTOBUILD_OS_PROJECT --name "Mekstack Debian Bookworm 12" -f value -c ID |
           grep -v $ID |
-          xargs -L1 openstack image set --public --hidden
+          xargs -L1 --no-run-if-empty openstack image set --public --hidden
         shell: bash
