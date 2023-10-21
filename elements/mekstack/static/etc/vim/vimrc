@@ -1,3 +1,18 @@
+" ======== BEGIN DEFAULTS ========
+
+runtime! debian.vim
+
+if has("syntax")
+  syntax on
+endif
+
+" ======== END DEFAULTS ========
+
+" jump to the last position when reopening a file
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+filetype plugin indent on
+
 let vimDir = '\$HOME/.vim'
 if stridx(&runtimepath, expand(vimDir)) == -1
   " vimDir is not on runtimepath, add it
@@ -18,3 +33,10 @@ set mouse=
 set ttymouse=
 set undolevels=10000
 set undoreload=10000
+
+set showcmd
+set showmatch
+set ignorecase
+set smartcase
+set incsearch
+set hidden

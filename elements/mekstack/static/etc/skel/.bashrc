@@ -88,6 +88,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias grep="grep --color=auto -i"
     alias ls='ls --color=auto'
     alias ip="ip -c"
+    alias pastebinit="pastebinit -b dpaste.com"
 fi
 
 # colored GCC warnings and errors
