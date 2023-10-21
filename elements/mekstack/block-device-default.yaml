@@ -23,4 +23,4 @@
 - fstab:
     name: fstab
     base: root_mnt
-    options: defaults,noatime,commit=300
+    options: defaults,compress=lzo,noatime,commit=300

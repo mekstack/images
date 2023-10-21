@@ -20,3 +20,4 @@
     - devuser
     - dhcp-all-interfaces
     - mekstack
+    - docker

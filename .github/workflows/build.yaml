@@ -61,11 +61,11 @@ jobs:
               --file ubuntu.qcow2 \
               "Mekstack Ubuntu 22.04.3 LTS"
 
-      - name: Build Mekstack Ubuntu Minimal
+      - name: Build Mekstack Ubuntu minimal
         run: |
           ELEMENTS_PATH=elements diskimage-builder ubuntu-minimal.yaml
 
-      - name: Publish Mekstack Ubuntu
+      - name: Publish Mekstack Ubuntu minimal
         run: |
           openstack image create \
               --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
@@ -77,7 +77,7 @@ jobs:
               --min-disk 3 \
               --min-ram 512 \
               --disk-format qcow2 \
-              --file ubuntu.qcow2 \
+              --file ubuntu-minimal.qcow2 \
               "Mekstack Ubuntu minimal 22.04.3 LTS"
 
       - name: Build Mekstack Debian

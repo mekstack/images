@@ -1,9 +1,5 @@
 fish:
   phase: post-install.d
-docker.io:
-  phase: post-install.d
-docker-compose:
-  phase: post-install.d
 vim:
   phase: post-install.d
 ncdu:
