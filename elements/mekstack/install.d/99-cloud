@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -x
+
+sudo useradd -m -d /var/cloud/ -s /bin/bash -u 69 cloud
+
+sudo cat > /etc/sudoers.d/cloud << EOF
+cloud ALL=(ALL) NOPASSWD:ALL
+EOF
+sudo chmod 0440 /etc/sudoers.d/cloud
+sudo visudo -c || sudo rm /etc/sudoers.d/cloud
+
+sudo chown -R cloud:cloud /var/cloud
