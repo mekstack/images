@@ -48,18 +48,25 @@ jobs:
 
       - name: Publish Mekstack Ubuntu
         run: |
-          openstack image create \
-              --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
-              --property hw_qemu_guest_agent=yes \
-              --property autobuild=yes \
-              --container-format bare \
-              --public \
-              --project $AUTOBUILD_OS_PROJECT \
-              --min-disk 5 \
-              --min-ram 1024 \
-              --disk-format qcow2 \
-              --file ubuntu.qcow2 \
-              "Mekstack Ubuntu 22.04.3 LTS"
+          export ID=$(
+            openstack image create \
+                --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
+                --property hw_qemu_guest_agent=yes \
+                --property autobuild=yes \
+                --container-format bare \
+                --public \
+                --project $AUTOBUILD_OS_PROJECT \
+                --min-disk 5 \
+                --min-ram 1024 \
+                --disk-format qcow2 \
+                --file ubuntu.qcow2 \
+                -f value -c id \
+                "Mekstack Ubuntu 22.04.3 LTS"
+              )
+          openstack image list --project $AUTOBUILD_OS_PROJECT --name "Mekstack Ubuntu 22.04.3 LTS" -f value -c ID |
+          grep -v $ID |
+          xargs -L1 openstack image set --public --hidden
+        shell: bash
 
       - name: Build Mekstack Ubuntu minimal
         run: |
@@ -67,18 +74,25 @@ jobs:
 
       - name: Publish Mekstack Ubuntu minimal
         run: |
-          openstack image create \
-              --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
-              --property hw_qemu_guest_agent=yes \
-              --property autobuild=yes \
-              --container-format bare \
-              --public \
-              --project $AUTOBUILD_OS_PROJECT \
-              --min-disk 3 \
-              --min-ram 512 \
-              --disk-format qcow2 \
-              --file ubuntu-minimal.qcow2 \
-              "Mekstack Ubuntu minimal 22.04.3 LTS"
+          export ID=$(
+            openstack image create \
+                --property description="Built on $(date +'%d %B'). Default user: ubuntu" \
+                --property hw_qemu_guest_agent=yes \
+                --property autobuild=yes \
+                --container-format bare \
+                --public \
+                --project $AUTOBUILD_OS_PROJECT \
+                --min-disk 3 \
+                --min-ram 512 \
+                --disk-format qcow2 \
+                --file ubuntu-minimal.qcow2 \
+                -f value -c id \
+                "Mekstack Ubuntu minimal 22.04.3 LTS"
+            )
+          openstack image list --project $AUTOBUILD_OS_PROJECT --name 'Mekstack Ubuntu minimal 22.04.3 LTS' -f value -c ID |
+          grep -v $ID |
+          xargs -L1 openstack image set --public --hidden
+        shell: bash
 
       - name: Build Mekstack Debian
         run: |
@@ -86,15 +100,22 @@ jobs:
 
       - name: Publish Mekstack Debian
         run: |
-          openstack image create \
-              --property description="Built on $(date +'%d %B'). Default user: debian" \
-              --property hw_qemu_guest_agent=yes \
-              --property autobuild=yes \
-              --container-format bare \
-              --public \
-              --project $AUTOBUILD_OS_PROJECT \
-              --min-disk 3 \
-              --min-ram 512 \
-              --disk-format qcow2 \
-              --file debian.qcow2 \
-              "Mekstack Debian Bookworm 12"
+          export ID=$(
+            openstack image create \
+                --property description="Built on $(date +'%d %B'). Default user: debian" \
+                --property hw_qemu_guest_agent=yes \
+                --property autobuild=yes \
+                --container-format bare \
+                --public \
+                --project $AUTOBUILD_OS_PROJECT \
+                --min-disk 3 \
+                --min-ram 512 \
+                --disk-format qcow2 \
+                --file debian.qcow2 \
+                -f value -c id \
+                "Mekstack Debian Bookworm 12"
+            )
+          openstack image list --project $AUTOBUILD_OS_PROJECT --name "Mekstack Debian Bookworm 12" -f value -c ID |
+          grep -v $ID |
+          xargs -L1 openstack image set --public --hidden
+        shell: bash
