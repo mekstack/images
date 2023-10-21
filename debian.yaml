@@ -3,9 +3,6 @@
   environment:
     DIB_RELEASE: bookworm
     DIB_BLOCK_DEVICE_CONFIG: "file://./elements/mekstack/block-device-default.yaml"
-    DIB_DEV_USER_USERNAME: cloud
-    DIB_DEV_USER_SHELL: "/bin/bash"
-    DIB_DEV_USER_PWDLESS_SUDO: "1"
     DIB_CLOUD_INIT_DATASOURCES: "ConfigDrive, OpenStack"
     DIB_APT_KEYRING: "/usr/share/keyrings/debian-archive-keyring.gpg"
     DIB_DISTRIBUTION_MIRROR: "https://mirror.yandex.ru/debian/"
@@ -19,7 +16,6 @@
     - openssh-server
     - cloud-init
     - cloud-init-datasources
-    - devuser
     - dhcp-all-interfaces
     - mekstack
     - docker
