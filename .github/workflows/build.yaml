@@ -87,9 +87,9 @@ jobs:
                 --disk-format qcow2 \
                 --file ubuntu-minimal.qcow2 \
                 -f value -c id \
-                "Mekstack Ubuntu minimal 22.04.3 LTS"
+                "Mekstack Ubuntu 22.04.3 LTS (minimal)"
             )
-          openstack image list --project $AUTOBUILD_OS_PROJECT --name 'Mekstack Ubuntu minimal 22.04.3 LTS' -f value -c ID |
+          openstack image list --project $AUTOBUILD_OS_PROJECT --name 'Mekstack Ubuntu 22.04.3 LTS (minimal)' -f value -c ID |
           grep -v $ID |
           xargs -L1 openstack image set --public --hidden
         shell: bash
