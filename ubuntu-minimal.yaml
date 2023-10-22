@@ -15,5 +15,5 @@
     - cloud-init
     - cloud-init-datasources
     - dhcp-all-interfaces
-    - uninstall-firmware
+    - minimize
     - mekstack
