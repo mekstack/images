@@ -8,3 +8,6 @@ man:
 iputils-ping:
 dnsutils:
 qemu-guest-agent:
+bash-completion:
+python-is-python3:
+htop:
