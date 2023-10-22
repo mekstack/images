@@ -4,6 +4,7 @@
     DIB_RELEASE: jammy
     DIB_BLOCK_DEVICE_CONFIG: "file://./elements/mekstack/block-device-default.yaml"
     DIB_CLOUD_INIT_DATASOURCES: "ConfigDrive, OpenStack"
+    DIB_DISTRIBUTION_MIRROR: "https://mirror.yandex.ru/ubuntu/"
     DIB_MIN_TMPFS: "4"
   elements:
     - base
