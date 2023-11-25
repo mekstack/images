@@ -94,8 +94,8 @@ fi
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-source /usr/share/fzf/completion.bash 2>&1 /dev/null || source /usr/share/bash-completion/completions/fzf 2>&1 /dev/null
-source /usr/share/fzf/key-bindings.bash  2>&1 /dev/null ||  source /usr/share/doc/fzf/examples/key-bindings.bash 2>&1 /dev/null
+source /usr/share/fzf/completion.bash 1> /dev/null 2> /dev/null || source /usr/share/bash-completion/completions/fzf 1> /dev/null 2> /dev/null
+source /usr/share/fzf/key-bindings.bash 1> /dev/null 2> /dev/null ||  source /usr/share/doc/fzf/examples/key-bindings.bash 1> /dev/null 2> /dev/null
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
