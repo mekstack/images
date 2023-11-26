@@ -2,6 +2,8 @@
 
 set -x
 
+sudo cp /etc/skel/.bashrc /root/.bashrc
+
 if [[ "${DISTRO_NAME}" == "debian" ]]; then
     sudo cp /etc/skel/.bashrc /home/debian/.bashrc
     sudo chown debian:debian /home/debian/.bashrc
