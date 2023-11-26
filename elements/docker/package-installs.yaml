@@ -1,4 +1,0 @@
-docker.io:
-  phase: post-install.d
-docker-compose:
-  phase: post-install.d
